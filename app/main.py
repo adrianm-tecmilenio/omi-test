@@ -47,10 +47,11 @@ if prompt := st.chat_input("Escribe tu pregunta:"):
     with st.spinner("El agente está pensando..."):
         try:
             response = requests.post(
-                "http://20.118.69.2/omi",
+                "http://172.206.131.179/omi",
                 json={
                     "message": prompt,
-                    "app": app_name
+                    "app": app_name,
+                    "user_id": 1377
                 }
             )
             if response.status_code == 200:
