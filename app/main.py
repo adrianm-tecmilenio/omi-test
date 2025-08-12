@@ -6,6 +6,11 @@ import uuid  # Para generar un session_id único
 # Título de la aplicación
 st.title("Chatbot OMI-Test")
 
+organization_ids = {
+    "zentia": 1010000,
+    "proposito_accion": 1010001
+}
+
 # Dropdown para seleccionar el app_name (fijo arriba)
 app_name = st.selectbox(
     "Selecciona el tipo de agente:",
@@ -46,11 +51,12 @@ if prompt := st.chat_input("Escribe tu pregunta:"):
     # Enviar la pregunta y el app_name al endpoint
     with st.spinner("El agente está pensando..."):
         try:
+            org_id = organization_ids[app_name]
             response = requests.post(
                 "http://172.206.131.179/omi",
                 json={
                     "message": prompt,
-                    "app": app_name,
+                    "id_organization": org_id,
                     "user_id": 1377
                 }
             )
