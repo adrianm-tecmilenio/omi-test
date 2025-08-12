@@ -53,7 +53,7 @@ if prompt := st.chat_input("Escribe tu pregunta:"):
         try:
             org_id = organization_ids[app_name]
             response = requests.post(
-                "http://172.206.131.179/omi",
+                "http://52.255.85.33/omi",
                 json={
                     "message": prompt,
                     "id_organization": org_id,
