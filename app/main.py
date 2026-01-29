@@ -12,11 +12,11 @@ organization_ids = {
 }
 
 # Dropdown para seleccionar el app_name (fijo arriba)
-app_name = st.selectbox(
-    "Selecciona el tipo de agente:",
-    ("zentia", "proposito_accion"),
-    index=0
-)
+# app_name = st.selectbox(
+#     "Selecciona el tipo de agente:",
+#     ("zentia", "proposito_accion"),
+#     index=0
+# )
 
 # Generar un session_id único al cargar la página o hacer refresh
 if "session_id" not in st.session_state:
@@ -48,26 +48,25 @@ if prompt := st.chat_input("Escribe tu pregunta:"):
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    # Enviar la pregunta y el app_name al endpoint
+    # Enviar la pregunta al endpoint
     with st.spinner("El agente está pensando..."):
         try:
-            org_id = organization_ids[app_name]
             response = requests.post(
-                "http://52.255.85.33/omi",
+                "http://zentia-demo-26.southcentralus.azurecontainer.io/rutas",
                 json={
-                    "message": prompt,
-                    "id_organization": org_id,
-                    "user_id": 1377
+                    "questions": prompt
                 }
             )
             if response.status_code == 200:
-                agent_response = response.json().get("message", "(Sin respuesta del agente)")
+                agent_response = response.json()
             else:
-                agent_response = "Error al conectar con el agente."
+                agent_response = {"error": "Error al conectar con el agente."}
         except Exception as e:
-            agent_response = f"Error: {str(e)}"
+            agent_response = {"error": f"Error: {str(e)}"}
 
-    # Mostrar la respuesta del agente con efecto de typewriter
-    st.session_state.messages.append({"role": "assistant", "content": agent_response})
+    # Mostrar la respuesta del agente
+    import json
+    formatted_response = json.dumps(agent_response, indent=2, ensure_ascii=False)
+    st.session_state.messages.append({"role": "assistant", "content": formatted_response})
     with st.chat_message("assistant"):
-        typewriter_effect(agent_response) 
+        st.json(agent_response) 
