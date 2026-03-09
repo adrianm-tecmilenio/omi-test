@@ -130,7 +130,7 @@ if prompt := st.chat_input("Escribe tu pregunta:"):
     with st.spinner("El agente está pensando..."):
         try:
             response = requests.post(
-                "http://localhost:8000/rutas",
+                "http://zentia-demo-26.southcentralus.azurecontainer.io/rutas",
                 json={"questions": prompt},
             )
             if response.status_code == 200:
